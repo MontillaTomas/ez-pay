@@ -1,6 +1,7 @@
 package com.example.ez_pay.Services.Impl;
 
 import com.example.ez_pay.DTOs.Request.InvoiceCreateRequest;
+import com.example.ez_pay.DTOs.Request.InvoiceUpdateRequest;
 import com.example.ez_pay.DTOs.Response.InvoiceResponse;
 import com.example.ez_pay.Exceptions.ResourceNotFoundException;
 import com.example.ez_pay.Mappers.InvoiceMapper;
@@ -67,24 +68,33 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public InvoiceResponse updateInvoice(UUID id, Invoice invoice) {
-        Invoice existing = invoiceRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Invoice not found with id: " + id));
+    public InvoiceResponse updateInvoice(UUID id, InvoiceUpdateRequest invoice) {
+        Invoice existingInvoice = invoiceRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Invoice not found with id: " + id));
 
-        existing.setReceiverName(invoice.getReceiverName());
-        existing.setReceiverCUIL(invoice.getReceiverCUIL());
-        existing.setAmount(invoice.getAmount());
-        existing.setExpirationDate(invoice.getExpirationDate());
-        if (invoice.getCompany() != null) {
-            existing.setCompany(invoice.getCompany());
+        // Validate cuil length
+        if (invoice.getReceiverCUIL().length() != 11) {
+            throw new IllegalArgumentException("CUIL must be exactly 11 characters long.");
         }
+        // Amount can't be less than or equal to zero
+        if (invoice.getAmount().doubleValue() <= 0) {
+            throw new IllegalArgumentException("Amount must be greater than zero.");
+        }
+        // Clean receiver name
+        invoice.setReceiverName(invoice.getReceiverName().trim());
 
-        Invoice saved = invoiceRepository.save(existing);
-        return invoiceMapper.toResponse(saved);
+        Invoice updatedEntity = invoiceMapper.toEntity(invoice, existingInvoice.getCompany());
+        updatedEntity.setId(existingInvoice.getId()); // Preserve the original ID
+        Invoice updatedInvoice = invoiceRepository.save(updatedEntity);
+        return invoiceMapper.toResponse(updatedInvoice);
     }
 
     @Override
     public void deleteInvoice(UUID id) {
+        if (!invoiceRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Invoice not found with id: " + id);
+        }
+
         invoiceRepository.deleteById(id);
     }
 }

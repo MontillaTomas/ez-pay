@@ -1,6 +1,7 @@
 package com.example.ez_pay.Mappers;
 
 import com.example.ez_pay.DTOs.Request.InvoiceCreateRequest;
+import com.example.ez_pay.DTOs.Request.InvoiceUpdateRequest;
 import com.example.ez_pay.DTOs.Response.InvoiceResponse;
 import com.example.ez_pay.Models.Company;
 import com.example.ez_pay.Models.Invoice;
@@ -34,6 +35,21 @@ public class InvoiceMapper {
     }
 
     public Invoice toEntity(InvoiceCreateRequest invoiceRequest, Company company) {
+        if (invoiceRequest == null) {
+            return null;
+        }
+
+        Invoice invoice = new Invoice();
+        invoice.setCompany(company);
+        invoice.setReceiverName(invoiceRequest.getReceiverName());
+        invoice.setReceiverCUIL(invoiceRequest.getReceiverCUIL());
+        invoice.setAmount(invoiceRequest.getAmount());
+        invoice.setExpirationDate(invoiceRequest.getExpirationDate());
+        invoice.setCreationDate(invoiceRequest.getCreationDate());
+        return invoice;
+    }
+
+    public Invoice toEntity(InvoiceUpdateRequest invoiceRequest, Company company) {
         if (invoiceRequest == null) {
             return null;
         }
