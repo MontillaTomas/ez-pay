@@ -1,6 +1,7 @@
 package com.example.ez_pay.Controllers;
 
 import com.example.ez_pay.DTOs.Request.InvoiceCreateRequest;
+import com.example.ez_pay.DTOs.Request.InvoiceUpdateRequest;
 import com.example.ez_pay.DTOs.Response.InvoiceResponse;
 import com.example.ez_pay.Services.InvoiceService;
 import lombok.RequiredArgsConstructor;
@@ -32,5 +33,17 @@ public class InvoiceController {
     public ResponseEntity<InvoiceResponse> createInvoice(@RequestBody InvoiceCreateRequest invoice) {
         InvoiceResponse createdInvoice = invoiceService.createInvoice(invoice);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdInvoice);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<InvoiceResponse> updateInvoice(@PathVariable UUID id, @RequestBody InvoiceUpdateRequest invoiceRequest) {
+        InvoiceResponse updatedInvoice = invoiceService.updateInvoice(id, invoiceRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedInvoice);
+    }
+
+                                                         @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteInvoice(@PathVariable UUID id) {
+        invoiceService.deleteInvoice(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
