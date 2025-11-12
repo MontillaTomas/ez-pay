@@ -21,9 +21,7 @@ public class InvoiceController {
 
     @GetMapping("/{id}")
     public ResponseEntity<InvoiceResponse> getInvoiceById(@PathVariable UUID id) {
-        return invoiceService.getInvoiceById(id)
-                .map(invoiceResponse -> ResponseEntity.ok().body(invoiceResponse))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        return ResponseEntity.status(HttpStatus.OK).body(invoiceService.getInvoiceById(id));
     }
 
     @GetMapping("/company/{companyId}")

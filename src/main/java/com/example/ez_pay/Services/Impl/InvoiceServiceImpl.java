@@ -1,6 +1,7 @@
 package com.example.ez_pay.Services.Impl;
 
 import com.example.ez_pay.DTOs.Response.InvoiceResponse;
+import com.example.ez_pay.Exceptions.ResourceNotFoundException;
 import com.example.ez_pay.Mappers.InvoiceMapper;
 import com.example.ez_pay.Models.Invoice;
 import com.example.ez_pay.Repositories.InvoiceRepository;
@@ -11,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -23,9 +23,10 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<InvoiceResponse> getInvoiceById(UUID id) {
-        return invoiceRepository.findById(id)
-                .map(invoiceMapper::toResponse);
+    public InvoiceResponse getInvoiceById(UUID id) {
+        Invoice invoice = invoiceRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Invoice not found with id: " + id));
+        return invoiceMapper.toResponse(invoice);
     }
 
     @Override
