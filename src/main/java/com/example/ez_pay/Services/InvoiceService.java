@@ -1,5 +1,6 @@
 package com.example.ez_pay.Services;
 
+import com.example.ez_pay.DTOs.Request.InvoiceCreateRequest;
 import com.example.ez_pay.DTOs.Response.InvoiceResponse;
 import com.example.ez_pay.Models.Invoice;
 
@@ -13,7 +14,7 @@ public interface InvoiceService {
 
     List<InvoiceResponse> getInvoicesByCompanyId(Long companyId);
 
-    InvoiceResponse createInvoice(Invoice invoice);
+    InvoiceResponse createInvoice(InvoiceCreateRequest invoice);
 
     InvoiceResponse updateInvoice(UUID id, Invoice invoice);
 
