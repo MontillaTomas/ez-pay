@@ -1,4 +1,4 @@
-package com.example.ez_pay.Models;
+package com.example.ez_pay.Model;
 
 public enum Category {
     AGUA,

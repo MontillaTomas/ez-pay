@@ -1,4 +1,4 @@
-package com.example.ez_pay.Models;
+package com.example.ez_pay.Model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -16,9 +16,6 @@ public class Company {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long companyId;
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private UserEntity user;
     @Column(nullable = false)
     private Category category;
     @Column(nullable = false)
@@ -39,5 +36,20 @@ public class Company {
     private BigDecimal averageInvoice;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "company")
     private List<Invoice> invoices;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 
+    public Company(Category category, String address, String province, String city, int monthlyInvoices, String cuit, String legalName, int numberOfPayments, BigDecimal averageInvoice, UserEntity user) {
+        this.category = category;
+        this.address = address;
+        this.province = province;
+        this.city = city;
+        this.monthlyInvoices = monthlyInvoices;
+        this.cuit = cuit;
+        this.legalName = legalName;
+        this.numberOfPayments = numberOfPayments;
+        this.averageInvoice = averageInvoice;
+        this.user = user;
+    }
 }

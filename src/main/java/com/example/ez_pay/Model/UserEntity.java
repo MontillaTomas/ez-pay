@@ -1,4 +1,4 @@
-package com.example.ez_pay.Models;
+package com.example.ez_pay.Model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -32,5 +32,6 @@ public class UserEntity {
     @Column(nullable = false)
     private String phone;
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Role rol;
 }
