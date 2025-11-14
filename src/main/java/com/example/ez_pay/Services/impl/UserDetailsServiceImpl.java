@@ -1,7 +1,7 @@
-package com.example.ez_pay.Service.impl;
+package com.example.ez_pay.Services.impl;
 
-import com.example.ez_pay.Model.UserEntity;
-import com.example.ez_pay.Repository.UserRepository;
+import com.example.ez_pay.Models.UserEntity;
+import com.example.ez_pay.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

@@ -1,11 +1,11 @@
-package com.example.ez_pay.Service;
+package com.example.ez_pay.Services;
 
-import com.example.ez_pay.DTO.AuthResponseDTO;
-import com.example.ez_pay.DTO.LoginRequestDTO;
-import com.example.ez_pay.DTO.UserDTO;
-import com.example.ez_pay.Model.Role;
-import com.example.ez_pay.Model.UserEntity;
-import com.example.ez_pay.Repository.UserRepository;
+import com.example.ez_pay.DTOs.AuthResponseDTO;
+import com.example.ez_pay.DTOs.LoginRequestDTO;
+import com.example.ez_pay.DTOs.UserDTO;
+import com.example.ez_pay.Models.Role;
+import com.example.ez_pay.Models.UserEntity;
+import com.example.ez_pay.Repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

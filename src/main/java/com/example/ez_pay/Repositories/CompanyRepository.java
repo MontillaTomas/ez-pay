@@ -1,6 +1,6 @@
-package com.example.ez_pay.Repository;
+package com.example.ez_pay.Repositories;
 
-import com.example.ez_pay.Model.Company;
+import com.example.ez_pay.Models.Company;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

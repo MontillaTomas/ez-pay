@@ -1,4 +1,4 @@
-package com.example.ez_pay.DTO;
+package com.example.ez_pay.DTOs;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

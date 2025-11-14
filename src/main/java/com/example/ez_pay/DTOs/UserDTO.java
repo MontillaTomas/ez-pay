@@ -1,4 +1,4 @@
-package com.example.ez_pay.DTO;
+package com.example.ez_pay.DTOs;
 
 import com.example.ez_pay.Models.Role;
 import io.swagger.v3.oas.annotations.media.Schema;

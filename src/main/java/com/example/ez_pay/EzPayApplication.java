@@ -19,10 +19,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
                 contact = @Contact(
                         name = "Milagros Sachetti",
                         email = "milagrossachetti@gmail.com"
-                ),
-                license = @License(
-                        name = "Apache 2.0",
-                        url = "http://www.apache.org/licenses/LICENSE-2.0.html"
                 )
         ),
         externalDocs = @ExternalDocumentation(

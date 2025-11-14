@@ -1,4 +1,4 @@
-package com.example.ez_pay.DTO;
+package com.example.ez_pay.DTOs;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

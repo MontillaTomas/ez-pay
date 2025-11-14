@@ -1,12 +1,12 @@
-package com.example.ez_pay.Service.impl;
+package com.example.ez_pay.Services.impl;
 
-import com.example.ez_pay.DTO.CompanyDTO;
-import com.example.ez_pay.Model.Category;
-import com.example.ez_pay.Model.Company;
-import com.example.ez_pay.Model.UserEntity;
-import com.example.ez_pay.Repository.CompanyRepository;
-import com.example.ez_pay.Repository.UserRepository;
-import com.example.ez_pay.Service.CompanyService;
+import com.example.ez_pay.DTOs.CompanyDTO;
+import com.example.ez_pay.Models.Category;
+import com.example.ez_pay.Models.Company;
+import com.example.ez_pay.Models.UserEntity;
+import com.example.ez_pay.Repositories.CompanyRepository;
+import com.example.ez_pay.Repositories.UserRepository;
+import com.example.ez_pay.Services.CompanyService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

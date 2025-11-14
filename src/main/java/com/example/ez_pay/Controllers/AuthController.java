@@ -1,8 +1,8 @@
-package com.example.ez_pay.Controller;
+package com.example.ez_pay.Controllers;
 
-import com.example.ez_pay.DTO.AuthResponseDTO;
-import com.example.ez_pay.DTO.LoginRequestDTO;
-import com.example.ez_pay.DTO.UserDTO;
+import com.example.ez_pay.DTOs.AuthResponseDTO;
+import com.example.ez_pay.DTOs.LoginRequestDTO;
+import com.example.ez_pay.DTOs.UserDTO;
 import com.example.ez_pay.Services.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

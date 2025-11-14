@@ -1,6 +1,6 @@
-package com.example.ez_pay.Controller;
+package com.example.ez_pay.Controllers;
 
-import com.example.ez_pay.DTO.CompanyDTO;
+import com.example.ez_pay.DTOs.CompanyDTO;
 import com.example.ez_pay.Services.CompanyService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

@@ -1,4 +1,4 @@
-package com.example.ez_pay.Model;
+package com.example.ez_pay.Models;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

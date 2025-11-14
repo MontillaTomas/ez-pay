@@ -1,4 +1,4 @@
-package com.example.ez_pay.Service;
+package com.example.ez_pay.Services;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
