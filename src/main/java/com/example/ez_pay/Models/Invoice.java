@@ -8,7 +8,6 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.UUID;
 
 @Entity
@@ -37,6 +36,5 @@ public class Invoice {
     private LocalDate creationDate;
     @Column(nullable = false)
     private LocalDate expirationDate;
-
 
 }

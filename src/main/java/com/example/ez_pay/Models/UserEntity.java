@@ -32,5 +32,6 @@ public class UserEntity {
     @Column(nullable = false)
     private String phone;
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Role rol;
 }
