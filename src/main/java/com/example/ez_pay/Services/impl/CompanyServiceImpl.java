@@ -31,6 +31,13 @@ public class CompanyServiceImpl implements CompanyService {
         UserEntity owner = userRepository.findByUsername(ownerUsername)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
+        if (companyRepository.findByUserId(owner.getId()).isPresent()) {
+            throw new RuntimeException("Ya existe un compania para el usuario. Un usuario solo puede tener una empresa asociada");
+        }
+
+        if (companyRepository.findByCuit(companyDTO.getCuit()).isPresent()) {
+            throw new RuntimeException("Error: ya existe una empresa con el CUIT ingresado");
+        }
         Category requestedCategory = companyDTO.getCategory();
 
         if (requestedCategory == null ) {

@@ -3,7 +3,7 @@ package com.example.ez_pay.Controller;
 import com.example.ez_pay.DTO.AuthResponseDTO;
 import com.example.ez_pay.DTO.LoginRequestDTO;
 import com.example.ez_pay.DTO.UserDTO;
-import com.example.ez_pay.Service.AuthService;
+import com.example.ez_pay.Services.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

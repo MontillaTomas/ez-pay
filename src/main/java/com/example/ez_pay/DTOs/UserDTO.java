@@ -1,6 +1,6 @@
 package com.example.ez_pay.DTO;
 
-import com.example.ez_pay.Model.Role;
+import com.example.ez_pay.Models.Role;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
