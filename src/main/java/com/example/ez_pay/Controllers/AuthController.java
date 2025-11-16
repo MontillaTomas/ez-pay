@@ -60,7 +60,7 @@ public class AuthController {
                                     ),
                                     @ExampleObject(
                                             name = "Rol no válido",
-                                            value = "{\"status\": \"400\", \"message\": \"Error: El rol ingresado 'Rol inválido' no es válido\"}"
+                                            value = "{\"status\": \"400\", \"message\": \"Error: El rol ingresado '[rol_ingresado]' no es válido\"}"
                                     )
                             }
                     )

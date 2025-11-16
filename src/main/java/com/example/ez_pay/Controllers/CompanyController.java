@@ -62,9 +62,25 @@ public class CompanyController {
                                     ),
                                     @ExampleObject(
                                             name = "Categoría no válida", // Nombre para el ejemplo
-                                            value = "{\"status\": \"400\", \"message\": \"Error: la categoría 'valor_invalido' no es un valor válido\"}"
+                                            value = "{\"status\": \"400\", \"message\": \"Error: la categoría '[valor_ingresado]' no es un valor válido\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "Formato no válido de CUIT",
+                                            value = "{\"status\": \"400\", \"message\": \"Error: invalid cuit format\"}"
                                     )
                             }
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Error: El CUIT '[cuit_ingresado]' no es válido o no existe en el padrón de AFIP.",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ResponseDTO.class),
+                            examples = @ExampleObject(
+                                    name = "CUIT no existe en ARCA",
+                                    value = "{\"status\": \"404\", \"message\": \"Error: El CUIT '[cuit_ingresado]' no es válido o no existe en el padrón de ARCA.\"}"
+                            )
                     )
             )
     })
