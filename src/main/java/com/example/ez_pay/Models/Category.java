@@ -1,44 +1,74 @@
 package com.example.ez_pay.Models;
 
 public enum Category {
-    AGUA,
-    ALIVIO_DE_CAJA,
-    CEMENTERIOS_PRIVADOS,
-    CLUBES,
-    COMPRAS_EN_INTERNET_E_COMMERC,
-    COMUNICACIONES_CELULARES,
-    COMUNICACIONES_LINEA_FIJA,
-    COMUNICACIONES_OTROS,
-    COMUNICACIONES_PREPAGOS_RECAR,
-    CONSEJOS_Y_COLEGIOS_PROFESIONA,
-    CONSUMO_CLIENTE_INTERMEDIO,
-    CONSUMO_OTROS,
-    CONSUMO_PREPAGOS,
-    CONSUMO_SEGURIDAD_Y_MONITOREO,
-    CONSUMO_VENTA_DIRECTA,
-    CONSUMO_VIAJES_ESTUD_TURISMO,
-    CREDITOS_PRESTAMOS_PERSONALES,
-    DEDICADO,
-    DESEMBOLSO,
-    ELECTRICIDAD,
-    ENTIDADES_DE_BIEN_PUBLICO_DON,
-    EXTRACCION_DE_DINERO,
-    FINTECH_BANCOS_DIGITALES,
-    GAS,
-    GESTION_DE_DEUDA,
-    HOME_AND_APPLIANCES,
-    INSTITUTO_DE_ENSENANZA,
-    MEDICINA_PREPAGA,
-    MUTUALES,
-    NO_DEFINIDO,
-    OBRAS_SOCIALES,
-    PLANES_DE_VIVIENDA,
-    PRODUCTORES_DE_SEGUROS,
-    SEGUROS,
-    SINDICATOS,
-    TARJETAS_DE_CREDITO,
-    TITULOS_DE_CAPITALIZACION,
-    TRIBUTOS_MUNICIPALES,
-    TRIBUTOS_NACIONALES_Y_PCIALES,
-    TV_SATELITAL_CABLE
+    AGUA("Agua"),
+    ALIVIO_DE_CAJA("Alivio de Caja"),
+    CEMENTERIOS_PRIVADOS("Cementerios Privados"),
+    CLUBES("Clubes"),
+    COMPRAS_EN_INTERNET_E_COMMERC("Compras en Internet E-Commerce"),
+    COMUNICACIONES_CELULARES("Comunicaciones Celulares"),
+    COMUNICACIONES_LINEA_FIJA("Comunicaciones Línea Fija"),
+    COMUNICACIONES_OTROS("Comunicaciones Otros"),
+    COMUNICACIONES_PREPAGOS_RECAR("Comunicaciones Prepagos Recarga"), // Expandido
+    CONSEJOS_Y_COLEGIOS_PROFESIONA("Consejos y Colegios Profesionales"), // Expandido
+    CONSUMO_CLIENTE_INTERMEDIO("Consumo Cliente Intermedio"),
+    CONSUMO_OTROS("Consumo Otros"),
+    CONSUMO_PREPAGOS("Consumo Prepagos"),
+    CONSUMO_SEGURIDAD_Y_MONITOREO("Consumo Seguridad y Monitoreo"),
+    CONSUMO_VENTA_DIRECTA("Consumo Venta Directa"),
+    CONSUMO_VIAJES_ESTUD_TURISMO("Consumo Viajes Estudiantes/Turismo"), // Expandido
+    CREDITOS_PRESTAMOS_PERSONALES("Créditos Préstamos Personales"),
+    DEDICADO("Dedicado"),
+    DESEMBOLSO("Desembolso"),
+    ELECTRICIDAD("Electricidad"),
+    ENTIDADES_DE_BIEN_PUBLICO_DON("Entidades de Bien Público Donación"), // Expandido
+    EXTRACCION_DE_DINERO("Extracción de Dinero"),
+    FINTECH_BANCOS_DIGITALES("Fintech Bancos Digitales"),
+    GAS("Gas"),
+    GESTION_DE_DEUDA("Gestión de Deuda"),
+    HOME_AND_APPLIANCES("Home and Appliances"),
+    INSTITUTO_DE_ENSENANZA("Instituto de Enseñanza"),
+    MEDICINA_PREPAGA("Medicina Prepaga"),
+    MUTUALES("Mutuales"),
+    NO_DEFINIDO("No Definido"),
+    OBRAS_SOCIALES("Obras Sociales"),
+    PLANES_DE_VIVIENDA("Planes de Vivienda"),
+    PRODUCTORES_DE_SEGUROS("Productores de Seguros"),
+    SEGUROS("Seguros"),
+    SINDICATOS("Sindicatos"),
+    TARJETAS_DE_CREDITO("Tarjetas de Crédito"),
+    TITULOS_DE_CAPITALIZACION("Títulos de Capitalización"),
+    TRIBUTOS_MUNICIPALES("Tributos Municipales"),
+    TRIBUTOS_NACIONALES_Y_PCIALES("Tributos Nacionales y Provinciales"),
+    TV_SATELITAL_CABLE("TV Satelital/Cable");
+
+    private final String displayName;
+    Category(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    @Override
+    public String toString() {
+        return displayName;
+    }
+
+    public static Category fromText(String text) {
+
+        String cleanText = text.trim();
+
+        for (Category cat : Category.values()) {
+            if (cat.getDisplayName().equalsIgnoreCase(cleanText)) {
+                return cat;
+            }
+        }
+        try {
+            return Category.valueOf(cleanText.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("No se encontró ninguna categoría válida para el texto: '" + text + "'");
+        }
+    }
 }

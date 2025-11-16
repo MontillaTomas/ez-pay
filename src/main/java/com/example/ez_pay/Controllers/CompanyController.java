@@ -1,10 +1,17 @@
 package com.example.ez_pay.Controllers;
 
 import com.example.ez_pay.DTOs.CompanyDTO;
+import com.example.ez_pay.DTOs.ResponseDTO;
 import com.example.ez_pay.Services.CompanyService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,10 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/company")
+@RequestMapping("/api/companies")
 @RequiredArgsConstructor
 @Tag(
-        name = "Controlador de la Empresa",
+        name = "Empresa",
         description = "Endpoint para el registro de empresas"
 )
 public class CompanyController {
@@ -25,27 +32,47 @@ public class CompanyController {
             summary = "Registrar una nueva empresa",
             description = "Crea una nueva empresa. Para ello, el usuario debe estar creado y autenticado con el ROL='Empresa'"
     )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "Company created successfully",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ResponseDTO.class),
+                            examples = @ExampleObject(
+                                    name = "Ejemplo de creación exitosa",
+                                    value = "{\"status\": \"201\", \"message\": \"Company created successfully\"}"
+                            )
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Error en la solicitud. (Ver ejemplos para detalles)",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ResponseDTO.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "Usuario ya tiene empresa", // Nombre para el ejemplo
+                                            value = "{\"status\": \"400\", \"message\": \"Ya existe un compania para el usuario. Un usuario solo puede tener una empresa asociada\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "CUIT duplicado", // Nombre para el ejemplo
+                                            value = "{\"status\": \"400\", \"message\": \"Error: ya existe una empresa con el CUIT ingresado\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "Categoría no válida", // Nombre para el ejemplo
+                                            value = "{\"status\": \"400\", \"message\": \"Error: la categoría 'valor_invalido' no es un valor válido\"}"
+                                    )
+                            }
+                    )
+            )
+    })
     @PostMapping("/registerCompany")
-    public ResponseEntity<String> register(@RequestBody CompanyDTO request) {
-        try {
-            companyService.createCompany(request);
-            return ResponseEntity.ok("¡Empresa registrada exitosamente!");
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-    /*
-    * @PostMapping("/registerCompany")
     public ResponseEntity<ResponseDTO> register(@RequestBody CompanyDTO request) {
-        try {
-            companyService.createCompany(request);
-            return ResponseEntity
-                    .status(HttpStatus.CREATED)
-                    .body(new ResponseDTO("201", "Company created successfully"));
-        } catch (RuntimeException e) {
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ResponseDTO("500", "Internal Server Error"));
-        }
-    }*/
+        companyService.createCompany(request);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(new ResponseDTO("201", "Company created successfully"));
+    }
 }
