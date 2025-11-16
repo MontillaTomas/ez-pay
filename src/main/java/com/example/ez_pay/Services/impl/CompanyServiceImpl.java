@@ -3,20 +3,15 @@ package com.example.ez_pay.Services.impl;
 import com.example.ez_pay.DTOs.CompanyDTO;
 import com.example.ez_pay.Mappers.CompanyMapper;
 import com.example.ez_pay.Models.Category;
-import com.example.ez_pay.Models.Company;
 import com.example.ez_pay.Models.UserEntity;
 import com.example.ez_pay.Repositories.CompanyRepository;
 import com.example.ez_pay.Repositories.UserRepository;
-import com.example.ez_pay.Services.messaging.CompanyQueueManager;
 import com.example.ez_pay.Services.CompanyService;
-import com.example.ez_pay.Services.IAfipValidationService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import com.example.ez_pay.Exceptions.ResourceNotFoundException;
-
-import java.util.Map;
 
 @Service
 @AllArgsConstructor
@@ -24,10 +19,10 @@ public class CompanyServiceImpl implements CompanyService {
 
     private CompanyRepository companyRepository;
     private UserRepository userRepository;
-    private final CompanyQueueManager companyQueueManager;
+    private CompanyMapper companyMapper;
 
     @Override
-    public void createCompany(CompanyDTO companyDTO) throws Exception {
+    public void createCompany(CompanyDTO companyDTO) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new ResourceNotFoundException("User is not logged in");
@@ -46,20 +41,7 @@ public class CompanyServiceImpl implements CompanyService {
             throw new IllegalArgumentException("Error: ya existe una empresa con el CUIT ingresado");
         }
         validateCategory(companyDTO.getCategory());
-
-        if (!validateCuitFormat(companyDTO.getCuit())) {
-            throw new IllegalArgumentException("Error: formato de cuit no válido");
-        }
-
-        Map<String, Object> datos = afipValidationService.validateCompany(companyDTO.getCuit());
-        if (datos.isEmpty()) {
-            throw new ResourceNotFoundException("Compania no encontrada");
-        }
-
-        Company savedComapny = companyMapper.toEntity(companyDTO);
-        savedComapny.setUser(owner);
-
-        companyRepository.save(savedComapny);
+        companyRepository.save(companyMapper.toEntity(companyDTO));
     }
 
     private Category validateCategory(String categoryName) {
@@ -73,13 +55,5 @@ public class CompanyServiceImpl implements CompanyService {
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Error: la categoría '" + categoryName + "' no es un valor válido.");
         }
-    }
-
-    private boolean validateCuitFormat(String cuit) {
-        String cuitLimpio = cuit.replace("-", "").trim();
-
-        company = companyRepository.save(company);
-
-        companyQueueManager.registerCompanyQueue(company.getCompanyId());
     }
 }
