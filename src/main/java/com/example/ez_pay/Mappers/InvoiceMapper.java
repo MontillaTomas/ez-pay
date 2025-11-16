@@ -5,9 +5,12 @@ import com.example.ez_pay.DTOs.Request.InvoiceUpdateRequest;
 import com.example.ez_pay.DTOs.Response.InvoiceResponse;
 import com.example.ez_pay.Models.Company;
 import com.example.ez_pay.Models.Invoice;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class InvoiceMapper {
@@ -32,6 +35,16 @@ public class InvoiceMapper {
         return entities.stream()
                 .map(this::toResponse)
                 .toList();
+    }
+
+    public Page<InvoiceResponse> toResponsePage(Page<Invoice> page) {
+        if (page == null) {
+            return Page.empty();
+        }
+        List<InvoiceResponse> content = page.getContent().stream()
+                .map(this::toResponse)
+                .collect(Collectors.toList());
+        return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
     }
 
     public Invoice toEntity(InvoiceCreateRequest invoiceRequest, Company company) {

@@ -14,14 +14,14 @@ import com.example.ez_pay.Repositories.InvoiceRepository;
 import com.example.ez_pay.Repositories.UserRepository;
 import com.example.ez_pay.Services.InvoiceService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -35,7 +35,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
 
     @Override
-    @Transactional(readOnly = true)
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public InvoiceResponse getInvoiceById(UUID id) {
         Invoice invoice = invoiceRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Invoice not found with id: " + id));
@@ -43,14 +43,15 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<InvoiceResponse> getInvoicesByCompanyId(Long companyId) {
-        List<Invoice> invoices = invoiceRepository.findByCompanyCompanyId(companyId);
-        return invoiceMapper.toResponseList(invoices);
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    public Page<InvoiceResponse> getInvoicesByCompanyId(Long companyId, int page, int size) {
+        PageRequest pageable = PageRequest.of(page, size);
+        Page<Invoice> invoicePage = invoiceRepository.findByCompanyCompanyId(companyId, pageable);
+        return invoiceMapper.toResponsePage(invoicePage);
     }
 
     @Override
-    @Transactional
+    @org.springframework.transaction.annotation.Transactional
     public InvoiceResponse createInvoice(InvoiceCreateRequest invoiceRequest) {
         // Resolve authenticated user and company
         String username = getAuthenticatedUsername();
@@ -75,7 +76,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    @Transactional
+    @org.springframework.transaction.annotation.Transactional
     public InvoiceResponse updateInvoice(UUID id, InvoiceUpdateRequest invoice) {
         Invoice existingInvoice = invoiceRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Invoice not found with id: " + id));
@@ -104,13 +105,28 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    @Transactional
+    @org.springframework.transaction.annotation.Transactional
     public void deleteInvoice(UUID id) {
         if (!invoiceRepository.existsById(id)) {
             throw new ResourceNotFoundException("Invoice not found with id: " + id);
         }
 
         invoiceRepository.deleteById(id);
+    }
+
+    @Override
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    public Page<InvoiceResponse> getInvoicesForAuthenticatedUser(int page, int size) {
+        String username = getAuthenticatedUsername();
+        UserEntity user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with username: " + username));
+
+        Company company = companyRepository.findByUserId(user.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Company not found for user id: " + user.getId()));
+
+        PageRequest pageable = PageRequest.of(page, size);
+        Page<Invoice> invoicePage = invoiceRepository.findByCompanyCompanyId(company.getCompanyId(), pageable);
+        return invoiceMapper.toResponsePage(invoicePage);
     }
 
     private void validateCUIL(String cuil) {
