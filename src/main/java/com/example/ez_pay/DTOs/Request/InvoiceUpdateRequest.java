@@ -1,5 +1,6 @@
 package com.example.ez_pay.DTOs.Request;
 
+import com.example.ez_pay.Models.InvoiceStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,4 +19,5 @@ public class InvoiceUpdateRequest {
     private BigDecimal amount;
     private LocalDate creationDate;
     private LocalDate expirationDate;
+    private InvoiceStatus status;
 }

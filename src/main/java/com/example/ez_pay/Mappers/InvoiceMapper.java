@@ -27,6 +27,7 @@ public class InvoiceMapper {
         dto.setAmount(entity.getAmount());
         dto.setCreationDate(entity.getCreationDate());
         dto.setExpirationDate(entity.getExpirationDate());
+        dto.setStatus(entity.getStatus());
 
         return dto;
     }
@@ -74,6 +75,7 @@ public class InvoiceMapper {
         invoice.setAmount(invoiceRequest.getAmount());
         invoice.setExpirationDate(invoiceRequest.getExpirationDate());
         invoice.setCreationDate(invoiceRequest.getCreationDate());
+        invoice.setStatus(invoiceRequest.getStatus());
         return invoice;
     }
 }

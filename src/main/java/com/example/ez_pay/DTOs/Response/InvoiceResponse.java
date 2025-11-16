@@ -1,5 +1,6 @@
 package com.example.ez_pay.DTOs.Response;
 
+import com.example.ez_pay.Models.InvoiceStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,4 +22,5 @@ public class InvoiceResponse {
     private BigDecimal amount;
     private LocalDate creationDate;
     private LocalDate expirationDate;
+    private InvoiceStatus status;
 }

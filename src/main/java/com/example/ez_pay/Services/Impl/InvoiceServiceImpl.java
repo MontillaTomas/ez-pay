@@ -8,6 +8,7 @@ import com.example.ez_pay.Exceptions.ResourceNotFoundException;
 import com.example.ez_pay.Mappers.InvoiceMapper;
 import com.example.ez_pay.Models.Company;
 import com.example.ez_pay.Models.Invoice;
+import com.example.ez_pay.Models.InvoiceStatus;
 import com.example.ez_pay.Models.UserEntity;
 import com.example.ez_pay.Repositories.CompanyRepository;
 import com.example.ez_pay.Repositories.InvoiceRepository;
@@ -71,6 +72,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoiceRequest.setReceiverName(invoiceRequest.getReceiverName().trim());
 
         Invoice invoice = invoiceMapper.toEntity(invoiceRequest, companyOpt.get());
+        invoice.setStatus(InvoiceStatus.PENDING);
         Invoice saved = invoiceRepository.save(invoice);
         return invoiceMapper.toResponse(saved);
     }
