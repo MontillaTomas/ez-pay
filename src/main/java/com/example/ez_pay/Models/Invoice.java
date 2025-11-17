@@ -36,5 +36,6 @@ public class Invoice {
     private LocalDate creationDate;
     @Column(nullable = false)
     private LocalDate expirationDate;
-
+    @Column(nullable = false)
+    private InvoiceStatus status;
 }
