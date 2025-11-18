@@ -10,7 +10,9 @@ public class AfipValidationServiceMockImpl implements IAfipValidationService {
         if (cuit == null || cuit.trim().isEmpty() || cuit.equals("00-00000000-0")) {
             return false;
         }
-        return false;
+        return true;
     }
+
+
 
 }

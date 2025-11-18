@@ -2,6 +2,7 @@ package com.example.ez_pay.Controllers;
 
 import com.example.ez_pay.DTOs.CompanyDTO;
 import com.example.ez_pay.DTOs.ResponseDTO;
+import com.example.ez_pay.Services.AfipValidationService;
 import com.example.ez_pay.Services.CompanyService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -13,10 +14,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/companies")
@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 )
 public class CompanyController {
     private final CompanyService companyService;
+    private final AfipValidationService afipValidationService;
 
     @Operation(
             summary = "Registrar una nueva empresa",
@@ -85,10 +86,22 @@ public class CompanyController {
             )
     })
     @PostMapping("/registerCompany")
-    public ResponseEntity<ResponseDTO> register(@RequestBody CompanyDTO request) {
+    public ResponseEntity<ResponseDTO> register(@RequestBody CompanyDTO request) throws Exception {
         companyService.createCompany(request);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(new ResponseDTO("201", "Company created successfully"));
     }
+
+    /*@GetMapping("/validate/{cuit}")
+    public ResponseEntity<?> validar(@PathVariable String cuit) {
+        try {
+            Map<String, Object> datos = afipValidationService.validateCompany(cuit);
+            return ResponseEntity.ok(datos);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", e.getMessage()));
+        }
+    }*/
+
 }

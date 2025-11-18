@@ -84,7 +84,9 @@ public class CompanyDTO {
 
     @Schema(
             description = "Clave Única de Identificación Tributaria (CUIT) de la empresa.",
-            example = "30-12345678-9"
+            example = "33693450239",
+            allowableValues = {"33693450239", "30558515305", "30202020204"
+            }
     )
     private String cuit;
 

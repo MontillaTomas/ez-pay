@@ -6,6 +6,7 @@ import com.example.ez_pay.Models.Category;
 import com.example.ez_pay.Models.UserEntity;
 import com.example.ez_pay.Repositories.CompanyRepository;
 import com.example.ez_pay.Repositories.UserRepository;
+import com.example.ez_pay.Services.AfipValidationService;
 import com.example.ez_pay.Services.CompanyService;
 import com.example.ez_pay.Services.IAfipValidationService;
 import lombok.AllArgsConstructor;
@@ -14,6 +15,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import com.example.ez_pay.Exceptions.ResourceNotFoundException;
 
+import java.util.Map;
+
 @Service
 @AllArgsConstructor
 public class CompanyServiceImpl implements CompanyService {
@@ -21,10 +24,11 @@ public class CompanyServiceImpl implements CompanyService {
     private CompanyRepository companyRepository;
     private UserRepository userRepository;
     private CompanyMapper companyMapper;
-    private IAfipValidationService afipValidationService;
+    //private IAfipValidationService afipValidationService;
+    private AfipValidationService afipValidationService;
 
     @Override
-    public void createCompany(CompanyDTO companyDTO) {
+    public void createCompany(CompanyDTO companyDTO) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new ResourceNotFoundException("User is not logged in");
@@ -43,11 +47,14 @@ public class CompanyServiceImpl implements CompanyService {
             throw new IllegalArgumentException("Error: ya existe una empresa con el CUIT ingresado");
         }
         validateCategory(companyDTO.getCategory());
+
         if (!validateCuitFormat(companyDTO.getCuit())) {
-            throw new IllegalArgumentException("Error: invalid cuit format");
+            throw new IllegalArgumentException("Error: formato de cuit no válido");
         }
-        if (!afipValidationService.isCuitValid(companyDTO.getCuit())) {
-            throw new ResourceNotFoundException("Error: El CUIT '" + companyDTO.getCuit() + "' no es válido o no existe en el padrón de ARCA.");
+
+        Map<String, Object> datos = afipValidationService.validateCompany(companyDTO.getCuit());
+        if (datos.isEmpty()) {
+            throw new ResourceNotFoundException("Compania no encontrada");
         }
         companyRepository.save(companyMapper.toEntity(companyDTO));
     }
