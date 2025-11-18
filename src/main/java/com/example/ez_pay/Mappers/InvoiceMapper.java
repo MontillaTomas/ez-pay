@@ -1,7 +1,6 @@
 package com.example.ez_pay.Mappers;
 
 import com.example.ez_pay.DTOs.Request.InvoiceCreateRequest;
-import com.example.ez_pay.DTOs.Request.InvoiceUpdateRequest;
 import com.example.ez_pay.DTOs.Response.InvoiceResponse;
 import com.example.ez_pay.Models.Company;
 import com.example.ez_pay.Models.Invoice;
@@ -14,6 +13,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class InvoiceMapper {
+
     public InvoiceResponse toResponse(Invoice entity) {
         if (entity == null) {
             return null;
@@ -25,8 +25,10 @@ public class InvoiceMapper {
         dto.setReceiverName(entity.getReceiverName());
         dto.setReceiverCUIL(entity.getReceiverCUIL());
         dto.setAmount(entity.getAmount());
-        dto.setCreationDate(entity.getCreationDate());
-        dto.setExpirationDate(entity.getExpirationDate());
+        dto.setSecondAmount(entity.getSecondAmount());
+        dto.setDueDate(entity.getDueDate());
+        dto.setSecondDueDate(entity.getSecondDueDate());
+        dto.setIssueDate(entity.getIssueDate());
         dto.setStatus(entity.getStatus());
 
         return dto;
@@ -58,24 +60,10 @@ public class InvoiceMapper {
         invoice.setReceiverName(invoiceRequest.getReceiverName());
         invoice.setReceiverCUIL(invoiceRequest.getReceiverCUIL());
         invoice.setAmount(invoiceRequest.getAmount());
-        invoice.setExpirationDate(invoiceRequest.getExpirationDate());
-        invoice.setCreationDate(invoiceRequest.getCreationDate());
-        return invoice;
-    }
-
-    public Invoice toEntity(InvoiceUpdateRequest invoiceRequest, Company company) {
-        if (invoiceRequest == null) {
-            return null;
-        }
-
-        Invoice invoice = new Invoice();
-        invoice.setCompany(company);
-        invoice.setReceiverName(invoiceRequest.getReceiverName());
-        invoice.setReceiverCUIL(invoiceRequest.getReceiverCUIL());
-        invoice.setAmount(invoiceRequest.getAmount());
-        invoice.setExpirationDate(invoiceRequest.getExpirationDate());
-        invoice.setCreationDate(invoiceRequest.getCreationDate());
-        invoice.setStatus(invoiceRequest.getStatus());
+        invoice.setSecondAmount(invoiceRequest.getSecondAmount());
+        invoice.setIssueDate(invoiceRequest.getIssueDate());
+        invoice.setDueDate(invoiceRequest.getDueDate());
+        invoice.setSecondDueDate(invoiceRequest.getSecondDueDate());
         return invoice;
     }
 }

@@ -32,10 +32,20 @@ public class Invoice {
 
     @Column(nullable = false)
     private BigDecimal amount;
+    private BigDecimal secondAmount;
+
     @Column(nullable = false, updatable = false)
-    private LocalDate creationDate;
+    private LocalDate issueDate;
+
     @Column(nullable = false)
-    private LocalDate expirationDate;
+    private LocalDate dueDate;
+    private LocalDate secondDueDate;
+
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private InvoiceStatus status;
+
+    @OneToOne(cascade =  CascadeType.ALL)
+    @JoinColumn(name = "payment_stub_id", unique = true)
+    private PaymentStub paymentStub;
 }

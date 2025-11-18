@@ -16,6 +16,8 @@ public class InvoiceCreateRequest {
     private String receiverName;
     private String receiverCUIL;
     private BigDecimal amount;
-    private LocalDate creationDate;
-    private LocalDate expirationDate;
+    private BigDecimal secondAmount;
+    private LocalDate dueDate;
+    private LocalDate secondDueDate;
+    private LocalDate issueDate;
 }
