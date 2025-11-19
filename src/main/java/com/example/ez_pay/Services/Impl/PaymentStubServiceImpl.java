@@ -1,11 +1,13 @@
 package com.example.ez_pay.Services.impl;
 
 import com.example.ez_pay.Builders.ElectronicPaymentCodeBuilder;
+import com.example.ez_pay.Exceptions.PaymentOverdueException;
 import com.example.ez_pay.Formatters.*;
 import com.example.ez_pay.Models.BarcodeType;
 import com.example.ez_pay.Models.Invoice;
 import com.example.ez_pay.Models.PaymentStub;
 import com.example.ez_pay.Services.PaymentStubService;
+import com.example.ez_pay.ValueObject.PaymentCalculationResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -62,5 +64,38 @@ public class PaymentStubServiceImpl implements PaymentStubService {
         paymentStub.setBarcodeType(BarcodeType.CODE_128C);
         paymentStub.setCreatedAt(LocalDate.now());
         return paymentStub;
+    }
+
+    @Override
+    public PaymentCalculationResult calculatePaymentStubData(Invoice invoice) {
+        LocalDate today = LocalDate.now();
+        // If there is no due date, apply the original amount
+        if (invoice.getDueDate() == null) {
+            return PaymentCalculationResult.builder()
+                    .amountToApply(invoice.getAmount())
+                    .appliedDueDate(null)
+                    .build();
+        }
+        // If there is no second due date and today is after the due date, raise an exception
+        if (invoice.getSecondDueDate() == null && today.isAfter(invoice.getDueDate())) {
+            throw new PaymentOverdueException("Payment is overdue and can not be paid.");
+        }
+        // If today is on or before the due date, apply the original amount
+        if (today.isBefore(invoice.getDueDate()) || today.isEqual(invoice.getDueDate())) {
+            return PaymentCalculationResult.builder()
+                    .amountToApply(invoice.getAmount())
+                    .appliedDueDate(invoice.getDueDate())
+                    .build();
+        }
+        // If today is after the due date but on or before the second due date, apply the second amount
+        if (invoice.getSecondDueDate() != null &&
+                (today.isBefore(invoice.getSecondDueDate()) || today.isEqual(invoice.getSecondDueDate()))) {
+            return PaymentCalculationResult.builder()
+                    .amountToApply(invoice.getSecondAmount())
+                    .appliedDueDate(invoice.getSecondDueDate())
+                    .build();
+        }
+        // If today is after the second due date, raise an exception
+        throw new PaymentOverdueException("Payment is overdue and no valid due date is available.");
     }
 }
