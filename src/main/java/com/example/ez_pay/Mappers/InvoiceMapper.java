@@ -32,6 +32,7 @@ public class InvoiceMapper {
         dto.setCompanyId(entity.getCompany().getCompanyId());
         dto.setReceiverName(entity.getReceiverName());
         dto.setReceiverCUIL(entity.getReceiverCUIL());
+        dto.setClientIdentifier(entity.getClientIdentifier());
         dto.setAmount(entity.getAmount());
         dto.setSecondAmount(entity.getSecondAmount());
         dto.setDueDate(entity.getDueDate());
@@ -75,6 +76,7 @@ public class InvoiceMapper {
         invoice.setCompany(company);
         invoice.setReceiverName(invoiceRequest.getReceiverName());
         invoice.setReceiverCUIL(invoiceRequest.getReceiverCUIL());
+        invoice.setClientIdentifier(invoiceRequest.getClientIdentifier());
         invoice.setAmount(invoiceRequest.getAmount());
         invoice.setSecondAmount(invoiceRequest.getSecondAmount());
         invoice.setIssueDate(invoiceRequest.getIssueDate());

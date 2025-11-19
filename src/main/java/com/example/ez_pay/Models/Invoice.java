@@ -29,6 +29,8 @@ public class Invoice {
     private String receiverName;
     @Column(nullable = false)
     private String receiverCUIL;
+    @Column(nullable = false, length = 14)
+    private String clientIdentifier;
 
     @Column(nullable = false)
     private BigDecimal amount;

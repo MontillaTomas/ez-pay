@@ -15,6 +15,7 @@ import java.time.LocalDate;
 public class InvoiceCreateRequest {
     private String receiverName;
     private String receiverCUIL;
+    private String clientIdentifier;
     private BigDecimal amount;
     private BigDecimal secondAmount;
     private LocalDate dueDate;

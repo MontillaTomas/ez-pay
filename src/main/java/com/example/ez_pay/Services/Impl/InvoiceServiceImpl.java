@@ -83,10 +83,17 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         // Validate inputs using private helpers
         validateCUIL(invoiceRequest.getReceiverCUIL());
+        validateClientIdentifier(invoiceRequest.getClientIdentifier());
         validateAmount(invoiceRequest.getAmount());
         validateSecondAmount(invoiceRequest.getSecondAmount());
         validateDueDates(invoiceRequest.getDueDate(), invoiceRequest.getSecondDueDate());
 
+        // Check if the client identifier is unique for this company
+        Optional<Invoice> existingInvoiceOpt = invoiceRepository.findByClientIdentifierAndCompanyCompanyId(
+                invoiceRequest.getClientIdentifier(), companyOpt.get().getCompanyId());
+        if (existingInvoiceOpt.isPresent()) {
+            throw new IllegalArgumentException("An invoice with the same client identifier already exists for this company.");
+        }
 
         // Clean receiver name
         String cleanedName = cleanReceiverName(invoiceRequest.getReceiverName());
@@ -104,6 +111,12 @@ public class InvoiceServiceImpl implements InvoiceService {
             return null;
         }
         return name.trim();
+    }
+
+    private void validateClientIdentifier(String clientIdentifier) {
+        if (clientIdentifier == null || !clientIdentifier.matches("\\d{14}")) {
+            throw new IllegalArgumentException("Client identifier must be exactly 14 digits.");
+        }
     }
 
     private void validateCUIL(String cuil) {

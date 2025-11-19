@@ -20,7 +20,7 @@ public class PaymentStubServiceImpl implements PaymentStubService {
     private final ServiceNumberEPCFormatter serviceNumberFormatter;
     private final FirstAmountEPCFormatter firstAmountFormatter;
     private final FirstDueDateEPCFormatter firstDueDateFormatter;
-    private final ClientCuilEPCFormatter clientCuilFormatter;
+    private final ClientIdentifierEPCFormatter clientIdentifierEPCFormatter;
     private final CurrencyEPCFormatter currencyFormatter;
     private final SecondAmountEPCFormatter secondAmountFormatter;
     private final SecondDueDateEPCFormatter secondDueDateFormatter;
@@ -30,7 +30,7 @@ public class PaymentStubServiceImpl implements PaymentStubService {
     public PaymentStubServiceImpl(ServiceNumberEPCFormatter serviceNumberFormatter,
                                   FirstAmountEPCFormatter firstAmountFormatter,
                                   FirstDueDateEPCFormatter firstDueDateFormatter,
-                                  ClientCuilEPCFormatter clientCuilFormatter,
+                                  ClientIdentifierEPCFormatter clientIdentifierEPCFormatter,
                                   CurrencyEPCFormatter currencyFormatter,
                                   SecondAmountEPCFormatter secondAmountFormatter,
                                   SecondDueDateEPCFormatter secondDueDateFormatter,
@@ -38,7 +38,7 @@ public class PaymentStubServiceImpl implements PaymentStubService {
         this.serviceNumberFormatter = serviceNumberFormatter;
         this.firstAmountFormatter = firstAmountFormatter;
         this.firstDueDateFormatter = firstDueDateFormatter;
-        this.clientCuilFormatter = clientCuilFormatter;
+        this.clientIdentifierEPCFormatter = clientIdentifierEPCFormatter;
         this.currencyFormatter = currencyFormatter;
         this.secondAmountFormatter = secondAmountFormatter;
         this.secondDueDateFormatter = secondDueDateFormatter;
@@ -51,7 +51,7 @@ public class PaymentStubServiceImpl implements PaymentStubService {
         parts.add(serviceNumberFormatter.format(invoice.getCompany()));
         parts.add(firstAmountFormatter.format(invoice.getAmount()));
         parts.add(firstDueDateFormatter.format(invoice.getDueDate()));
-        parts.add(clientCuilFormatter.format(invoice.getReceiverCUIL()));
+        parts.add(clientIdentifierEPCFormatter.format(invoice.getClientIdentifier()));
         parts.add(currencyFormatter.format(null));
         parts.add(secondAmountFormatter.format(new SecondAmountContext(invoice.getAmount(), invoice.getSecondAmount())));
         parts.add(secondDueDateFormatter.format(new SecondDueDateContext(invoice.getDueDate(), invoice.getSecondDueDate())));
