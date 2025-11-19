@@ -12,12 +12,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/invoices")
 @RequiredArgsConstructor
-@Tag(name = "Controlador de Facturas", description = "Endpoints para creación, consulta, actualización y eliminación de facturas")
+@Tag(name = "Controlador de Facturas", description = "Endpoints para creación y consulta de facturas")
 @SecurityRequirement(name = "bearerAuth")
 public class InvoiceController {
     private final InvoiceService invoiceService;
@@ -49,7 +50,7 @@ public class InvoiceController {
             description = "Crea una nueva factura asociada a la empresa del usuario autenticado."
     )
     @PostMapping
-    public ResponseEntity<InvoiceResponse> createInvoice(@RequestBody InvoiceCreateRequest invoice) {
+    public ResponseEntity<InvoiceResponse> createInvoice(@Valid @RequestBody InvoiceCreateRequest invoice) {
         InvoiceResponse createdInvoice = invoiceService.createInvoice(invoice);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdInvoice);
     }
