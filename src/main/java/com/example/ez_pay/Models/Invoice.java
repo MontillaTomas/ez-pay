@@ -37,7 +37,6 @@ public class Invoice {
     @Column(nullable = false, updatable = false)
     private LocalDate issueDate;
 
-    @Column(nullable = false)
     private LocalDate dueDate;
     private LocalDate secondDueDate;
 

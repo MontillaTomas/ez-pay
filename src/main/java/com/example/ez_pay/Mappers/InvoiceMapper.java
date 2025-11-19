@@ -2,8 +2,12 @@ package com.example.ez_pay.Mappers;
 
 import com.example.ez_pay.DTOs.Request.InvoiceCreateRequest;
 import com.example.ez_pay.DTOs.Response.InvoiceResponse;
+import com.example.ez_pay.DTOs.Response.PaymentStubResponse;
+import com.example.ez_pay.Enricher.PaymentStubEnricher;
 import com.example.ez_pay.Models.Company;
 import com.example.ez_pay.Models.Invoice;
+import com.example.ez_pay.ValueObject.PaymentCalculationResult;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Component;
@@ -12,12 +16,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 public class InvoiceMapper {
+    private final PaymentStubEnricher paymentStubEnricher;
 
     public InvoiceResponse toResponse(Invoice entity) {
         if (entity == null) {
             return null;
         }
+
+        PaymentCalculationResult calc = paymentStubEnricher.enrich(entity);
 
         InvoiceResponse dto = new InvoiceResponse();
         dto.setId(entity.getId());
@@ -30,6 +38,12 @@ public class InvoiceMapper {
         dto.setSecondDueDate(entity.getSecondDueDate());
         dto.setIssueDate(entity.getIssueDate());
         dto.setStatus(entity.getStatus());
+        dto.setPaymentStub(PaymentStubResponse.builder()
+                        .id(entity.getPaymentStub().getId())
+                        .electronicPaymentCode(entity.getPaymentStub().getElectronicPaymentCode())
+                        .currentAmount(calc.getAmountToApply())
+                        .appliedDueDate(calc.getAppliedDueDate())
+                .build());
 
         return dto;
     }
