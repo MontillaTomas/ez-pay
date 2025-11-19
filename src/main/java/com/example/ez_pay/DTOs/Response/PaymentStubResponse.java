@@ -20,4 +20,5 @@ public class PaymentStubResponse {
     private BarcodeType barcodeType;
     private BigDecimal currentAmount;
     private LocalDate appliedDueDate;
+    private boolean canBePaid;
 }

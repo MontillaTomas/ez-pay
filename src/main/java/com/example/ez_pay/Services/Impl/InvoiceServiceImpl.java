@@ -125,6 +125,12 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     private void validateDueDates(java.time.LocalDate dueDate, java.time.LocalDate secondDueDate) {
+        if (dueDate == null && secondDueDate == null) {
+            return;
+        }
+        if (dueDate == null && secondDueDate != null) {
+            throw new IllegalArgumentException("First due date must be provided if second due date is set.");
+        }
         if (secondDueDate != null && !secondDueDate.isAfter(dueDate)) {
             throw new IllegalArgumentException("Second due date must be after the first due date.");
         }

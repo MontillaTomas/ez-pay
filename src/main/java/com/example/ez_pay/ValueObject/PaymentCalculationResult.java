@@ -15,4 +15,5 @@ import java.time.LocalDate;
 public class PaymentCalculationResult {
     private BigDecimal amountToApply;
     private LocalDate appliedDueDate;
+    private boolean canBePaid;
 }

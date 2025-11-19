@@ -41,8 +41,10 @@ public class InvoiceMapper {
         dto.setPaymentStub(PaymentStubResponse.builder()
                         .id(entity.getPaymentStub().getId())
                         .electronicPaymentCode(entity.getPaymentStub().getElectronicPaymentCode())
+                        .barcodeType(entity.getPaymentStub().getBarcodeType())
                         .currentAmount(calc.getAmountToApply())
                         .appliedDueDate(calc.getAppliedDueDate())
+                        .canBePaid(calc.isCanBePaid())
                 .build());
 
         return dto;
