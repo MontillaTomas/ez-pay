@@ -29,13 +29,24 @@ public class Invoice {
     private String receiverName;
     @Column(nullable = false)
     private String receiverCUIL;
+    @Column(nullable = false, length = 14)
+    private String clientIdentifier;
 
     @Column(nullable = false)
     private BigDecimal amount;
+    private BigDecimal secondAmount;
+
     @Column(nullable = false, updatable = false)
-    private LocalDate creationDate;
+    private LocalDate issueDate;
+
+    private LocalDate dueDate;
+    private LocalDate secondDueDate;
+
     @Column(nullable = false)
-    private LocalDate expirationDate;
-    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private InvoiceStatus status;
+
+    @OneToOne(cascade =  CascadeType.ALL)
+    @JoinColumn(name = "payment_stub_id", unique = true)
+    private PaymentStub paymentStub;
 }

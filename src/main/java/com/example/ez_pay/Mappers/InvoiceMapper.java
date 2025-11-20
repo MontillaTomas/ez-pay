@@ -1,10 +1,13 @@
 package com.example.ez_pay.Mappers;
 
 import com.example.ez_pay.DTOs.Request.InvoiceCreateRequest;
-import com.example.ez_pay.DTOs.Request.InvoiceUpdateRequest;
 import com.example.ez_pay.DTOs.Response.InvoiceResponse;
+import com.example.ez_pay.DTOs.Response.PaymentStubResponse;
+import com.example.ez_pay.Enricher.PaymentStubEnricher;
 import com.example.ez_pay.Models.Company;
 import com.example.ez_pay.Models.Invoice;
+import com.example.ez_pay.ValueObject.PaymentCalculationResult;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Component;
@@ -13,21 +16,37 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 public class InvoiceMapper {
+    private final PaymentStubEnricher paymentStubEnricher;
+
     public InvoiceResponse toResponse(Invoice entity) {
         if (entity == null) {
             return null;
         }
+
+        PaymentCalculationResult calc = paymentStubEnricher.enrich(entity);
 
         InvoiceResponse dto = new InvoiceResponse();
         dto.setId(entity.getId());
         dto.setCompanyId(entity.getCompany().getCompanyId());
         dto.setReceiverName(entity.getReceiverName());
         dto.setReceiverCUIL(entity.getReceiverCUIL());
+        dto.setClientIdentifier(entity.getClientIdentifier());
         dto.setAmount(entity.getAmount());
-        dto.setCreationDate(entity.getCreationDate());
-        dto.setExpirationDate(entity.getExpirationDate());
+        dto.setSecondAmount(entity.getSecondAmount());
+        dto.setDueDate(entity.getDueDate());
+        dto.setSecondDueDate(entity.getSecondDueDate());
+        dto.setIssueDate(entity.getIssueDate());
         dto.setStatus(entity.getStatus());
+        dto.setPaymentStub(PaymentStubResponse.builder()
+                        .id(entity.getPaymentStub().getId())
+                        .electronicPaymentCode(entity.getPaymentStub().getElectronicPaymentCode())
+                        .barcodeType(entity.getPaymentStub().getBarcodeType())
+                        .currentAmount(calc.getAmountToApply())
+                        .appliedDueDate(calc.getAppliedDueDate())
+                        .canBePaid(calc.isCanBePaid())
+                .build());
 
         return dto;
     }
@@ -57,25 +76,12 @@ public class InvoiceMapper {
         invoice.setCompany(company);
         invoice.setReceiverName(invoiceRequest.getReceiverName());
         invoice.setReceiverCUIL(invoiceRequest.getReceiverCUIL());
+        invoice.setClientIdentifier(invoiceRequest.getClientIdentifier());
         invoice.setAmount(invoiceRequest.getAmount());
-        invoice.setExpirationDate(invoiceRequest.getExpirationDate());
-        invoice.setCreationDate(invoiceRequest.getCreationDate());
-        return invoice;
-    }
-
-    public Invoice toEntity(InvoiceUpdateRequest invoiceRequest, Company company) {
-        if (invoiceRequest == null) {
-            return null;
-        }
-
-        Invoice invoice = new Invoice();
-        invoice.setCompany(company);
-        invoice.setReceiverName(invoiceRequest.getReceiverName());
-        invoice.setReceiverCUIL(invoiceRequest.getReceiverCUIL());
-        invoice.setAmount(invoiceRequest.getAmount());
-        invoice.setExpirationDate(invoiceRequest.getExpirationDate());
-        invoice.setCreationDate(invoiceRequest.getCreationDate());
-        invoice.setStatus(invoiceRequest.getStatus());
+        invoice.setSecondAmount(invoiceRequest.getSecondAmount());
+        invoice.setIssueDate(invoiceRequest.getIssueDate());
+        invoice.setDueDate(invoiceRequest.getDueDate());
+        invoice.setSecondDueDate(invoiceRequest.getSecondDueDate());
         return invoice;
     }
 }

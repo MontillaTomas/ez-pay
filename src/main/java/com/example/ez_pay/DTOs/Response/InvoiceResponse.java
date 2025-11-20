@@ -19,8 +19,12 @@ public class InvoiceResponse {
     private Long companyId;
     private String receiverName;
     private String receiverCUIL;
+    private String clientIdentifier;
     private BigDecimal amount;
-    private LocalDate creationDate;
-    private LocalDate expirationDate;
+    private BigDecimal secondAmount;
+    private LocalDate dueDate;
+    private LocalDate secondDueDate;
+    private LocalDate issueDate;
     private InvoiceStatus status;
+    private PaymentStubResponse paymentStub;
 }
