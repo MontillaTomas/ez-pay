@@ -1,5 +1,6 @@
 package com.example.ez_pay.Services.impl;
 
+import com.example.ez_pay.Clients.Person.PersonValidationClient;
 import com.example.ez_pay.DTOs.Request.InvoiceCreateRequest;
 import com.example.ez_pay.DTOs.Response.InvoiceResponse;
 import com.example.ez_pay.Exceptions.AccessDeniedException;
@@ -32,6 +33,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     private final InvoiceMapper invoiceMapper;
     private final UserRepository userRepository;
     private final PaymentStubService paymentStubService;
+    private final PersonValidationClient personValidationClient;
 
     @Override
     @org.springframework.transaction.annotation.Transactional(readOnly = true)
@@ -81,8 +83,13 @@ public class InvoiceServiceImpl implements InvoiceService {
             throw new ResourceNotFoundException("Company not found for user id: " + user.getId());
         }
 
-        // Validate inputs using private helpers
+        // Validate receiver CUIL via external service and private helper
         validateCUIL(invoiceRequest.getReceiverCUIL());
+        if (!personValidationClient.validatePerson(invoiceRequest.getReceiverCUIL())) {
+            throw new IllegalArgumentException("Receiver CUIL is not valid according to external validation service.");
+        }
+
+        // Validate inputs using private helpers
         validateClientIdentifier(invoiceRequest.getClientIdentifier());
         validateAmount(invoiceRequest.getAmount());
         validateSecondAmount(invoiceRequest.getSecondAmount());
