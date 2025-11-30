@@ -31,7 +31,8 @@ public class SecurityConfig {
                                 "/api/auth/**",
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
-                                "/swagger-ui.html"
+                                "/swagger-ui.html",
+                                "/api/v1/invoices/epc/**"
                                 ).permitAll()
                         .requestMatchers("/api/company/**").hasAuthority("EMPRESA")
                         .anyRequest().authenticated()

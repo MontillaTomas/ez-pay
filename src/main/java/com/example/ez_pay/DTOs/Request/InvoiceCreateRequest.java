@@ -33,7 +33,7 @@ public class InvoiceCreateRequest {
             example = "Empresa SA",
             requiredMode = Schema.RequiredMode.REQUIRED
     )
-    @NotNull(message = "receiverName is required")
+    @NotNull(message = "Nombre del receptor es requerido")
     private String receiverName;
 
     @Schema(
@@ -41,7 +41,7 @@ public class InvoiceCreateRequest {
             example = "20333444555",
             requiredMode = Schema.RequiredMode.REQUIRED
     )
-    @NotNull(message = "receiverCUIL is required")
+    @NotNull(message = "CUIL del receptor es requerido")
     @Pattern(regexp = "\\d{11}", message = "CUIL must be exactly 11 digits")
     private String receiverCUIL;
 
@@ -50,7 +50,7 @@ public class InvoiceCreateRequest {
             example = "12345678901234",
             requiredMode = Schema.RequiredMode.REQUIRED
     )
-    @NotNull(message = "clientIdentifier is required")
+    @NotNull(message = "Identificador de cliente es requerido")
     @Pattern(regexp = "\\d{14}", message = "Client identifier must be exactly 14 digits")
     private String clientIdentifier;
 
@@ -59,17 +59,15 @@ public class InvoiceCreateRequest {
             example = "1500.50",
             requiredMode = Schema.RequiredMode.REQUIRED
     )
-    @NotNull(message = "amount is required")
-    @Positive(message = "Amount must be greater than zero")
+    @NotNull(message = "Monto es requerido")
+    @Positive(message = "Monto debe ser mayor que cero")
     private BigDecimal amount;
 
     @Schema(
             description = "Segundo monto. Si se provee, debe ser mayor que cero.",
-            example = "500.00",
-            requiredMode = Schema.RequiredMode.REQUIRED
+            example = "500.00"
     )
-    @NotNull(message = "secondAmount is required")
-    @Positive(message = "Second amount must be greater than zero")
+    @Positive(message = "Segundo monto debe ser mayor que cero")
     private BigDecimal secondAmount;
 
     @Schema(
@@ -89,6 +87,6 @@ public class InvoiceCreateRequest {
             example = "2025-11-19",
             requiredMode = Schema.RequiredMode.REQUIRED
     )
-    @NotNull(message = "issueDate is required")
+    @NotNull(message = "Fecha de emisión es requerida")
     private LocalDate issueDate;
 }
