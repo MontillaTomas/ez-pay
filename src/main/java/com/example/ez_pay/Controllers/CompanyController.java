@@ -2,6 +2,10 @@ package com.example.ez_pay.Controllers;
 
 import com.example.ez_pay.DTOs.CompanyDTO;
 import com.example.ez_pay.DTOs.ResponseDTO;
+import com.example.ez_pay.Exceptions.ResourceNotFoundException;
+import com.example.ez_pay.Models.UserEntity;
+import com.example.ez_pay.Repositories.CompanyRepository;
+import com.example.ez_pay.Repositories.UserRepository;
 import com.example.ez_pay.Services.AfipValidationService;
 import com.example.ez_pay.Services.CompanyService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,9 +15,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -28,6 +35,8 @@ import java.util.Map;
 public class CompanyController {
     private final CompanyService companyService;
     private final AfipValidationService afipValidationService;
+    private final CompanyRepository companyRepository;
+    private final UserRepository userRepository;
 
     @Operation(
             summary = "Registrar una nueva empresa",
@@ -91,6 +100,31 @@ public class CompanyController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(new ResponseDTO("201", "Company created successfully"));
+    }
+
+    // refactorizar, es solo para avanzar en el front
+    @GetMapping("/getCompanyByUser/{username}")
+    public ResponseEntity<?> getCompanyByUser(@PathVariable String username) {
+
+        //verifico que esta logeado
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new ResourceNotFoundException("User is not logged in");
+        }
+
+        //obtengo el nombre
+
+        //lo que debo hacer es que de acuerdo al nombre del usuario, verificar que exista
+
+        String ownerUsername = authentication.getName();
+
+        UserEntity owner = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        if (!ownerUsername.equals(username)) {
+            throw new ResourceNotFoundException("Los usuarios no coinciden");
+        }
+        return ResponseEntity.ok(companyRepository.findByUserId(owner.getId()));
     }
 
     /*@GetMapping("/validate/{cuit}")

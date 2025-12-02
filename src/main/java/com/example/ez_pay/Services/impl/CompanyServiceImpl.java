@@ -3,6 +3,7 @@ package com.example.ez_pay.Services.impl;
 import com.example.ez_pay.DTOs.CompanyDTO;
 import com.example.ez_pay.Mappers.CompanyMapper;
 import com.example.ez_pay.Models.Category;
+import com.example.ez_pay.Models.Company;
 import com.example.ez_pay.Models.UserEntity;
 import com.example.ez_pay.Repositories.CompanyRepository;
 import com.example.ez_pay.Repositories.UserRepository;
@@ -56,7 +57,11 @@ public class CompanyServiceImpl implements CompanyService {
         if (datos.isEmpty()) {
             throw new ResourceNotFoundException("Compania no encontrada");
         }
-        companyRepository.save(companyMapper.toEntity(companyDTO));
+
+        Company savedComapny = companyMapper.toEntity(companyDTO);
+        savedComapny.setUser(owner);
+
+        companyRepository.save(savedComapny);
     }
 
     private Category validateCategory(String categoryName) {

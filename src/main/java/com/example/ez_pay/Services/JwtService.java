@@ -25,6 +25,14 @@ public class JwtService {
     }
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+
+        // 1. Obtener los roles/autoridades del UserDetailsz
+        String roles = userDetails.getAuthorities().stream()
+                .map(grantedAuthority -> grantedAuthority.getAuthority())
+                .collect(java.util.stream.Collectors.joining(","));
+
+        extraClaims.put("roles", roles);
+
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
