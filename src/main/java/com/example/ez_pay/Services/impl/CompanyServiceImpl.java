@@ -6,6 +6,7 @@ import com.example.ez_pay.Models.Company;
 import com.example.ez_pay.Models.UserEntity;
 import com.example.ez_pay.Repositories.CompanyRepository;
 import com.example.ez_pay.Repositories.UserRepository;
+import com.example.ez_pay.Services.messaging.CompanyQueueManager;
 import com.example.ez_pay.Services.CompanyService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -18,6 +19,7 @@ public class CompanyServiceImpl implements CompanyService {
 
     private CompanyRepository companyRepository;
     private UserRepository userRepository;
+    private final CompanyQueueManager companyQueueManager;
 
     @Override
     public void createCompany(CompanyDTO companyDTO) {
@@ -46,6 +48,8 @@ public class CompanyServiceImpl implements CompanyService {
 
         Company company = new Company(requestedCategory, companyDTO.getAddress(), companyDTO.getProvince(), companyDTO.getCity(), companyDTO.getMonthlyInvoices(), companyDTO.getCuit(), companyDTO.getLegalName(), companyDTO.getNumberOfPayments(),companyDTO.getAverageInvoice(), owner);
 
-        companyRepository.save(company);
+        company = companyRepository.save(company);
+
+        companyQueueManager.registerCompanyQueue(company.getCompanyId());
     }
 }

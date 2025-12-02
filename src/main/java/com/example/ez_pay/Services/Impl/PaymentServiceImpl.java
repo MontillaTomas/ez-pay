@@ -34,7 +34,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentReceiptRepository paymentReceiptRepository;
     private final PaymentStubService paymentStubService;
     private final PaymentReceiptMapper paymentReceiptMapper;
-    //private final PaymentNotificationProducer paymentNotificationProducer;
+    private final PaymentNotificationProducer paymentNotificationProducer;
 
     @Override
     @Transactional
@@ -78,6 +78,15 @@ public class PaymentServiceImpl implements PaymentService {
         receipt.setAmountPaid(paymentData.getAmountToApply());
 
         PaymentReceipt receiptSaved = paymentReceiptRepository.save(receipt);
+
+        Long companyId = receiptSaved.getInvoice().getCompany().getCompanyId();
+        PaymentNotification notification = new PaymentNotification(
+                receiptSaved.getId(),
+                invoicePaymentRequest.getEpc(),
+                companyId,
+                receiptSaved.getPaymentDateTime(),
+                "PAID");
+        paymentNotificationProducer.sendPaymentNotification(companyId, notification);
 
         return paymentReceiptMapper.toResponse(receiptSaved);
     }
