@@ -35,6 +35,7 @@ public class SecurityConfig {
                                 "/api/v1/invoices/epc/**"
                                 ).permitAll()
                         .requestMatchers("/api/company/**").hasAuthority("EMPRESA")
+                        .requestMatchers("/api/v1/payments/**").hasAuthority("EMPLEADO")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

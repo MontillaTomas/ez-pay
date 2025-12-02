@@ -1,6 +1,5 @@
 package com.example.ez_pay.Mappers;
 
-import com.example.ez_pay.DTOs.Request.InvoicePaymentRequest;
 import com.example.ez_pay.DTOs.Response.InvoicePaymentResponse;
 import com.example.ez_pay.Models.PaymentReceipt;
 import org.springframework.stereotype.Component;
@@ -14,7 +13,7 @@ public class PaymentReceiptMapper {
 
         InvoicePaymentResponse dto = new InvoicePaymentResponse();
         dto.setPaymentReceiptId(entity.getId());
-        dto.setPaymentDate(entity.getPaymentDate());
+        dto.setPaymentDateTime(entity.getPaymentDateTime());
         dto.setAmountPaid(entity.getAmountPaid());
         dto.setReceiverName(entity.getInvoice().getReceiverName());
         dto.setReceiverCUIL(entity.getInvoice().getReceiverCUIL());

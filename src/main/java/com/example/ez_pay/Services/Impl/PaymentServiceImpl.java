@@ -8,10 +8,12 @@ import com.example.ez_pay.Exceptions.InvoiceCannotBePaidException;
 import com.example.ez_pay.Exceptions.ResourceNotFoundException;
 import com.example.ez_pay.Mappers.PaymentReceiptMapper;
 import com.example.ez_pay.Models.*;
+import com.example.ez_pay.Notifications.PaymentNotification;
 import com.example.ez_pay.Repositories.EmployeeRepository;
 import com.example.ez_pay.Repositories.InvoiceRepository;
 import com.example.ez_pay.Repositories.PaymentReceiptRepository;
 import com.example.ez_pay.Repositories.UserRepository;
+import com.example.ez_pay.Services.messaging.PaymentNotificationProducer;
 import com.example.ez_pay.Services.PaymentService;
 import com.example.ez_pay.Services.PaymentStubService;
 import com.example.ez_pay.ValueObject.PaymentCalculationResult;
@@ -21,7 +23,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +34,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentReceiptRepository paymentReceiptRepository;
     private final PaymentStubService paymentStubService;
     private final PaymentReceiptMapper paymentReceiptMapper;
+    //private final PaymentNotificationProducer paymentNotificationProducer;
 
     @Override
     @Transactional
@@ -69,7 +72,7 @@ public class PaymentServiceImpl implements PaymentService {
         invoice.setStatus(InvoiceStatus.PAID);
         PaymentReceipt receipt = new PaymentReceipt();
         receipt.setInvoice(invoice);
-        receipt.setPaymentDate(LocalDate.now());
+        receipt.setPaymentDateTime(LocalDateTime.now());
         receipt.setEmployee(emp);
         receipt.setPaymentPoint(emp.getPaymentPoint());
         receipt.setAmountPaid(paymentData.getAmountToApply());

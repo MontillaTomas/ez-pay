@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -24,7 +24,7 @@ public class PaymentReceipt {
     private BigDecimal amountPaid;
 
     @Column(nullable = false)
-    private LocalDate paymentDate;
+    private LocalDateTime paymentDateTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id")
