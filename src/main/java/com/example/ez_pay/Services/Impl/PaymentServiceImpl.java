@@ -85,7 +85,11 @@ public class PaymentServiceImpl implements PaymentService {
                 invoicePaymentRequest.getEpc(),
                 companyId,
                 receiptSaved.getPaymentDateTime(),
-                "PAID");
+                "PAID",
+                receiptSaved.getInvoice().getReceiverName(),
+                receiptSaved.getInvoice().getReceiverCUIL(),
+                emp.getId(),
+                emp.getPaymentPoint().getId());
         paymentNotificationProducer.sendPaymentNotification(companyId, notification);
 
         return paymentReceiptMapper.toResponse(receiptSaved);

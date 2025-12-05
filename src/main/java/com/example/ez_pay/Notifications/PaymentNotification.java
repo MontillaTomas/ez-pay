@@ -16,4 +16,8 @@ public class PaymentNotification {
     private Long companyId;
     private LocalDateTime paymentDate;
     private String status;
+    private String receiverName;
+    private String receiverCUIL;
+    private Long employeeId;
+    private Long paymentPointId;
 }
