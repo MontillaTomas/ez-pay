@@ -18,4 +18,8 @@ public class Employee {
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", unique = true)
     private UserEntity user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "payment_point_id")
+    private PaymentPoint paymentPoint;
+
 }

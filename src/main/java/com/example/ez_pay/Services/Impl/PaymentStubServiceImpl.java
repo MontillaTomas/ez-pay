@@ -4,6 +4,7 @@ import com.example.ez_pay.Builders.ElectronicPaymentCodeBuilder;
 import com.example.ez_pay.Formatters.*;
 import com.example.ez_pay.Models.BarcodeType;
 import com.example.ez_pay.Models.Invoice;
+import com.example.ez_pay.Models.InvoiceStatus;
 import com.example.ez_pay.Models.PaymentStub;
 import com.example.ez_pay.Services.PaymentStubService;
 import com.example.ez_pay.ValueObject.PaymentCalculationResult;
@@ -68,12 +69,13 @@ public class PaymentStubServiceImpl implements PaymentStubService {
     @Override
     public PaymentCalculationResult calculatePaymentStubData(Invoice invoice) {
         LocalDate today = LocalDate.now();
+        boolean paid = invoice.getStatus() == InvoiceStatus.PAID;
         // If there is no due date, apply the original amount
         if (invoice.getDueDate() == null) {
             return PaymentCalculationResult.builder()
                     .amountToApply(invoice.getAmount())
                     .appliedDueDate(null)
-                    .canBePaid(true)
+                    .canBePaid(!paid)
                     .build();
         }
         // If there is no second due date and today is after the due date, mark as unpaid
@@ -89,7 +91,7 @@ public class PaymentStubServiceImpl implements PaymentStubService {
             return PaymentCalculationResult.builder()
                     .amountToApply(invoice.getAmount())
                     .appliedDueDate(invoice.getDueDate())
-                    .canBePaid(true)
+                    .canBePaid(!paid)
                     .build();
         }
         // If today is after the due date but on or before the second due date, apply the second amount
@@ -98,7 +100,7 @@ public class PaymentStubServiceImpl implements PaymentStubService {
             return PaymentCalculationResult.builder()
                     .amountToApply(invoice.getSecondAmount())
                     .appliedDueDate(invoice.getSecondDueDate())
-                    .canBePaid(true)
+                    .canBePaid(!paid)
                     .build();
         }
         // If today is after the second due date, mark as unpaid

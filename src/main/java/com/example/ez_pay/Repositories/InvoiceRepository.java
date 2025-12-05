@@ -10,6 +10,7 @@ import java.util.UUID;
 
 public interface InvoiceRepository extends JpaRepository<Invoice, UUID> {
     Page<Invoice> findByCompanyCompanyId(Long companyId, Pageable pageable);
+    Optional<Invoice> findByPaymentStubElectronicPaymentCode(String electronicPaymentCode);
 
     Optional<Invoice> findByClientIdentifierAndCompanyCompanyId(String clientIdentifier, Long companyId);
 

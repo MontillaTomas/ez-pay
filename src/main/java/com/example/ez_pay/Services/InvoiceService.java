@@ -10,6 +10,7 @@ public interface InvoiceService {
     Page<InvoiceResponse> getInvoicesForAuthenticatedUser(int page, int size);
 
     InvoiceResponse getInvoiceById(UUID id);
+    InvoiceResponse getInvoiceByEpc(String epc);
 
     InvoiceResponse createInvoice(InvoiceCreateRequest invoiceRequest);
 }

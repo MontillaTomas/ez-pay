@@ -46,6 +46,15 @@ public class InvoiceController {
     }
 
     @Operation(
+            summary = "Obtener factura por Código Electrónico de Pago",
+            description = "Recupera los detalles de una factura dado su Código Electrónico de Pago. No requiere autenticación."
+    )
+    @GetMapping("epc/{epc}")
+    public ResponseEntity<InvoiceResponse> getInvoiceByEpc(@PathVariable String epc) {
+        return ResponseEntity.status(HttpStatus.OK).body(invoiceService.getInvoiceByEpc(epc));
+    }
+
+    @Operation(
             summary = "Crear nueva factura",
             description = "Crea una nueva factura asociada a la empresa del usuario autenticado."
     )
