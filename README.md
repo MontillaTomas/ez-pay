@@ -157,9 +157,13 @@ Registra una nueva empresa en el sistema.
 ```
 POST /api/v1/invoices
 ```
-🔒 Requiere autenticación
+🔒 Requiere autenticación (ROL='EMPRESA')
 
 Crea una nueva factura con su talón de pago asociado.
+
+* En caso de no proveer ambas fechas de vencimiento, la factura siempre podrá ser pagada.
+* Si solo se provee `dueDate`, la factura podrá ser pagada hasta esa fecha.
+* Si se proveen ambas fechas, la factura podrá ser pagada hasta `secondDueDate`.
 
 **Payload:**
 ```json
