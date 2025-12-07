@@ -3,6 +3,8 @@ package com.example.ez_pay.Controllers;
 import com.example.ez_pay.DTOs.CompanyDTO;
 import com.example.ez_pay.DTOs.ResponseDTO;
 import com.example.ez_pay.Exceptions.ResourceNotFoundException;
+import com.example.ez_pay.Mappers.CompanyMapper;
+import com.example.ez_pay.Models.Company;
 import com.example.ez_pay.Models.UserEntity;
 import com.example.ez_pay.Repositories.CompanyRepository;
 import com.example.ez_pay.Repositories.UserRepository;
@@ -24,6 +26,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/companies")
@@ -37,6 +40,7 @@ public class CompanyController {
     private final AfipValidationService afipValidationService;
     private final CompanyRepository companyRepository;
     private final UserRepository userRepository;
+    private final CompanyMapper companyMapper;
 
     @Operation(
             summary = "Registrar una nueva empresa",
@@ -124,7 +128,12 @@ public class CompanyController {
         if (!ownerUsername.equals(username)) {
             throw new ResourceNotFoundException("Los usuarios no coinciden");
         }
-        return ResponseEntity.ok(companyRepository.findByUserId(owner.getId()));
+        Optional<Company> company = companyRepository.findByUserId(owner.getId());
+        if (company.isPresent()) {
+            CompanyDTO dto = companyMapper.toDTO(company.get());
+            dto.setCategory(company.get().getCategory().toString());
+            return ResponseEntity.ok(dto);
+        } else return ResponseEntity.notFound().build();
     }
 
     /*@GetMapping("/validate/{cuit}")
