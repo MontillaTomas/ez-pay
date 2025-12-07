@@ -11,21 +11,15 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class PaymentLocation {
+@AllArgsConstructor
+public class PaymentPoint {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
-    private String address;
-    @Column(nullable = false)
-    private String city;
-    @Column(nullable = false)
-    private String state;
-    @Column(nullable = false)
     private String name;
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "payment_location_id", nullable = false) // <-- Mucho más claro
+    private String address;
+    @OneToMany(mappedBy = "paymentPoint")
     private List<Employee> employees;
 }

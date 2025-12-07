@@ -44,9 +44,11 @@ public class SecurityConfig {
                                 "/api/auth/**",
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
-                                "/swagger-ui.html"
+                                "/swagger-ui.html",
+                                "/api/v1/invoices/epc/**"
                                 ).permitAll()
-                        .requestMatchers("/api/companies/**").hasAuthority("EMPRESA")
+                        .requestMatchers("/api/company/**").hasAuthority("EMPRESA")
+                        .requestMatchers("/api/v1/payments/**").hasAuthority("EMPLEADO")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
