@@ -86,6 +86,8 @@ sequenceDiagram
 
 ## Endpoints
 
+Para más detalles visitar los [docs](https://ez-pay-prod.onrender.com/swagger-ui/index.html)
+
 ### 🔐 Autenticación
 
 #### Registrar Usuario
@@ -297,4 +299,55 @@ Registra el pago de una factura y envía notificación a la empresa.
 
 ## Cómo ejecutarlo 
 
-> TODO
+Para ejecutar el proyecto EZ-PAY de forma local, sigue los siguientes pasos.
+
+1. Levantar la infraestructura
+
+```bash
+docker-compose up -d
+```
+
+2. Agregar un empleado a la DB
+
+Una vez que el contenedor de PostgreSQL esté activo, debes insertar datos iniciales, incluyendo un punto de pago y un usuario `EMPLEADO` (con la contraseña `unaClaveMuySegura123` hasheada) para poder registrar el pago de una factura.
+
+```bash
+docker exec -it ez-pay-postgres-1 psql -U myuser -d mydatabase
+```
+
+Una vez dentro de la consola de `psql` ejecutar:
+
+```sql
+INSERT INTO payment_point
+(id, address, "name")
+VALUES(1, 'Av. Principal 123', 'Sucursal Centro');
+
+INSERT INTO user_entity
+(id, birth, email, firstname, last_name, "password", phone, rol, username)
+VALUES(1, '1995-05-20', 'juan.perez@dominio.com', 'Juan', 'Pérez', '$2a$10$9AJHogeADbE6t.C8WN1yZOfIDos2h/ntJvJBWKlAOaPQqXY3C.Q2e', '1122334455', 'EMPLEADO', 'jperez95');
+
+INSERT INTO employee
+(id, payment_point_id, user_id)
+VALUES(1, 1, 1);
+```
+
+3. Construir y ejecutar el contenedor del backend
+
+```bash
+docker build -t ez-pay .
+```
+
+```bash
+docker run --network=ez-pay_default \
+  -p 8080:8080 \
+  -e DB_URL="jdbc:postgresql://postgres:5432/mydatabase" \
+  -e DB_USERNAME="myuser" \
+  -e DB_PASSWORD="secret" \
+  -e RABBIT_HOST="rabbitmq" \
+  -e RABBIT_PORT="5672" \
+  -e RABBIT_VHOST="/" \
+  -e RABBIT_USERNAME="admin" \
+  -e RABBIT_PASSWORD="admin" \
+  -e JWT_SECRET="0d181cdce2e15205aba691bf8c16b68f0a6f99ea0ea8df45cbf7a7afdd48c17d" \
+  ez-pay
+```
