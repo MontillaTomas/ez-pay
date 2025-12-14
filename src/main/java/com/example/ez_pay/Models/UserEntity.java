@@ -1,3 +1,4 @@
+
 package com.example.ez_pay.Models;
 
 import jakarta.persistence.*;

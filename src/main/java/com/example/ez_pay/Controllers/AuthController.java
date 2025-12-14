@@ -1,11 +1,14 @@
+
 package com.example.ez_pay.Controllers;
 
 import com.example.ez_pay.DTOs.AuthResponseDTO;
 import com.example.ez_pay.DTOs.LoginRequestDTO;
+import com.example.ez_pay.DTOs.ResponseDTO;
 import com.example.ez_pay.DTOs.UserDTO;
 import com.example.ez_pay.Services.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -34,16 +37,34 @@ public class AuthController {
     )
     @ApiResponses(value = {
             @ApiResponse(
-                    responseCode = "200",
-                    description = "¡Usuario registrado exitosamente!"
+                    responseCode = "201",
+                    description = "User created successfully",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ResponseDTO.class),
+                            examples = @ExampleObject(
+                                    name = "Ejemplo de creación exitosa",
+                                    value = "{\"status\": \"201\", \"message\": \"User created successfully\"}"
+                            )
+                    )
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "Error: El nombre de usuario ya está en uso."
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Error: El rol especificado no es válido. Debe ser EMPLEADO o EMPRESA."
+                    description = "Error en la solicitud. (Ver ejemplos para detalles)",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ResponseDTO.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "Usuario registrado",
+                                            value = "{\"status\": \"400\", \"message\": \"Error: El nombre de usuario ya está en uso.\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "Rol no válido",
+                                            value = "{\"status\": \"400\", \"message\": \"Error: El rol ingresado 'Rol inválido' no es válido\"}"
+                                    )
+                            }
+                    )
             ),
             @ApiResponse(
                     responseCode = "500",
@@ -51,13 +72,12 @@ public class AuthController {
             )
     })
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody UserDTO request) {
-        try {
-            authService.register(request);
-            return ResponseEntity.ok("¡Usuario registrado exitosamente!");
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<ResponseDTO> register(@RequestBody UserDTO request) {
+        authService.register(request);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(new ResponseDTO("201", "User created successfully"));
+
     }
 
     @Operation(
@@ -72,8 +92,8 @@ public class AuthController {
                             schema = @Schema(implementation = AuthResponseDTO.class)) }
             ),
             @ApiResponse(
-                    responseCode = "401",
-                    description = "Autenticación fallida: nombre de usuario o contraseña incorrectos."
+                    responseCode = "403",
+                    description = "Usuario o contraseña incorrectos"
             ),
             @ApiResponse(
                     responseCode = "500",
@@ -82,10 +102,8 @@ public class AuthController {
     })
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginRequestDTO request) {
-        try {
-            return ResponseEntity.ok(authService.login(request));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthResponseDTO(null));
-        }
+        return ResponseEntity
+                .status(HttpStatus.ACCEPTED)
+                .body(authService.login(request));
     }
 }

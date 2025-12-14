@@ -40,16 +40,4 @@ public class Company {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    public Company(Category category, String address, String province, String city, int monthlyInvoices, String cuit, String legalName, int numberOfPayments, BigDecimal averageInvoice, UserEntity user) {
-        this.category = category;
-        this.address = address;
-        this.province = province;
-        this.city = city;
-        this.monthlyInvoices = monthlyInvoices;
-        this.cuit = cuit;
-        this.legalName = legalName;
-        this.numberOfPayments = numberOfPayments;
-        this.averageInvoice = averageInvoice;
-        this.user = user;
-    }
 }

@@ -57,9 +57,9 @@ public class UserDTO {
     private String phone;
 
     @Schema(
-            description = "Rol que tendrá el usuario en la plataforma. Solo se permite EMPLEADO o EMPRESA.",
-            example = "EMPLEADO",
-            allowableValues = {"EMPLEADO", "EMPRESA"}
+            description = "Rol que tendrá el usuario en la plataforma.",
+            example = "Empleado",
+            allowableValues = {"Empleado", "Empresa"}
     )
-    private Role rol;
+    private String rol;
 }

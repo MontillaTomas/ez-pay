@@ -1,8 +1,13 @@
+
 package com.example.ez_pay.Services;
 
 import com.example.ez_pay.DTOs.AuthResponseDTO;
 import com.example.ez_pay.DTOs.LoginRequestDTO;
 import com.example.ez_pay.DTOs.UserDTO;
+import com.example.ez_pay.Exceptions.AuthenticationException;
+import com.example.ez_pay.Exceptions.ResourceNotFoundException;
+import com.example.ez_pay.Mappers.UserMapper;
+import com.example.ez_pay.Models.Category;
 import com.example.ez_pay.Models.Role;
 import com.example.ez_pay.Models.UserEntity;
 import com.example.ez_pay.Repositories.UserRepository;
@@ -23,39 +28,34 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final UserMapper userMapper;
 
     public UserEntity register(UserDTO request) {
         if (userRepository.findByUsername(request.getUsername()).isPresent()) {
-            throw new RuntimeException("Error: El nombre de usuario ya está en uso.");
+            throw new IllegalArgumentException("Error: El nombre de usuario ya está en uso.");
         }
 
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new RuntimeException("Error: El email ya está en uso.");
+            throw new IllegalArgumentException("Error: El email ya está en uso.");
         }
 
-        Role requestedRole = request.getRol();
+        Role requestedRole = validateRole(request.getRol());
 
-        if (requestedRole == null || (requestedRole != Role.EMPLEADO && requestedRole != Role.EMPRESA)) {
-            throw new RuntimeException("Error: El rol especificado no es válido. Debe ser EMPLEADO o EMPRESA.");
-        }
+        UserEntity userEntity = userMapper.toEntity(request);
 
-        UserEntity user = new UserEntity();
-        user.setFirstname(request.getFirstname());
-        user.setLastName(request.getLastName());
-        user.setBirth(request.getBirth());
-        user.setUsername(request.getUsername());
-        user.setEmail(request.getEmail());
-        user.setPhone(request.getPhone());
+        userEntity.setPassword(passwordEncoder.encode(request.getPassword()));
+        userEntity.setRol(requestedRole);
 
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        user.setRol(requestedRole);
-
-        return userRepository.save(user);
+        return userRepository.save(userEntity);
     }
 
     public AuthResponseDTO login(LoginRequestDTO request) {
-        // 1. Autenticar al usuario
+        // buscar al usuario
+        UserEntity user = userRepository.findByUsername(request.getUsername())
+                .orElseThrow(() -> new AuthenticationException("Usuario o contraseña incorrectos"));
+
+        // Autenticar al usuario
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
@@ -63,12 +63,7 @@ public class AuthService {
                 )
         );
 
-        // 2. Si la autenticación es exitosa, buscar al usuario
-        UserEntity user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-
         // 3. Crear el UserDetails (puedes usar tu UserDetailsServiceImpl o crearlo aquí)
-        // Usaremos tu UserDetailsServiceImpl para cargar los detalles (incluyendo roles)
         UserDetails userDetails = new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),
@@ -81,4 +76,16 @@ public class AuthService {
         // 5. Devolver el token
         return new AuthResponseDTO(token);
     }
+
+    private static Role validateRole(String requestedRole) {
+        if (requestedRole == null || requestedRole.toString().isEmpty()) {
+            throw new ResourceNotFoundException("Error: Debe especificar un rol para el usuario.");
+        }
+        try{
+            return Role.fromText(requestedRole.toString());
+        } catch (IllegalArgumentException e){
+            throw new IllegalArgumentException("Error: el rol ingresado '" + requestedRole.toString() + "' no es válido.");
+        }
+    }
+
 }

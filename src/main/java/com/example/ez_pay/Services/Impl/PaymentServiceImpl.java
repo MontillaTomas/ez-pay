@@ -1,4 +1,4 @@
-package com.example.ez_pay.Services.impl;
+package com.example.ez_pay.Services.Impl;
 
 import com.example.ez_pay.DTOs.Request.InvoicePaymentRequest;
 import com.example.ez_pay.DTOs.Response.InvoicePaymentResponse;
