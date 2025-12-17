@@ -7,9 +7,7 @@ import com.example.ez_pay.DTOs.UserDTO;
 import com.example.ez_pay.Exceptions.AuthenticationException;
 import com.example.ez_pay.Exceptions.ResourceNotFoundException;
 import com.example.ez_pay.Mappers.UserMapper;
-import com.example.ez_pay.Models.Category;
-import com.example.ez_pay.Models.Role;
-import com.example.ez_pay.Models.UserEntity;
+import com.example.ez_pay.Models.*;
 import com.example.ez_pay.Repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -34,19 +33,11 @@ public class AuthService {
         if (userRepository.findByUsername(request.getUsername()).isPresent()) {
             throw new IllegalArgumentException("Error: El nombre de usuario ya está en uso.");
         }
-
-        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new IllegalArgumentException("Error: El email ya está en uso.");
-        }
-
         Role requestedRole = validateRole(request.getRol());
 
         UserEntity userEntity = userMapper.toEntity(request);
-
         userEntity.setPassword(passwordEncoder.encode(request.getPassword()));
         userEntity.setRol(requestedRole);
-
-
         return userRepository.save(userEntity);
     }
 
