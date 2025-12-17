@@ -21,5 +21,4 @@ public class Employee {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payment_point_id")
     private PaymentPoint paymentPoint;
-
 }

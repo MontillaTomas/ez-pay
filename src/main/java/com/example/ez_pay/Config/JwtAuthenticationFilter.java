@@ -1,7 +1,7 @@
 package com.example.ez_pay.Config;
 
 import com.example.ez_pay.Services.JwtService;
-import com.example.ez_pay.Services.impl.UserDetailsServiceImpl;
+import com.example.ez_pay.Services.Impl.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
